@@ -2,7 +2,7 @@ using System;
 using Celeste.Mod.Meta;
 using MonoMod.ModInterop;
 
-namespace Celeste.Mod.YourMod;
+namespace Celeste.Mod.CustomConfigExample;
 
 [ModImportName("OverworldHelper")]
 public static class OverworldHelperImports

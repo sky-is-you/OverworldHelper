@@ -1,4 +1,4 @@
-namespace Celeste.Mod.YourMod.CustomConfig;
+namespace Celeste.Mod.CustomConfigExample.CustomConfig;
 
 public class CustomMeta
 {

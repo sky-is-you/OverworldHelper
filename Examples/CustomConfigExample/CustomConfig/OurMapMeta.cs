@@ -1,6 +1,6 @@
 using Celeste.Mod.Meta;
 
-namespace Celeste.Mod.YourMod.CustomConfig;
+namespace Celeste.Mod.CustomConfigExample.CustomConfig;
 
 public class OurMapMeta : MapMeta
 {
