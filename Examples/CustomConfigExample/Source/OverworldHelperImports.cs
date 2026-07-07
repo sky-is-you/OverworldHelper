@@ -13,7 +13,9 @@ public static class OverworldHelperImports
     public static Action<Action<Overworld>> UnsubscribeFromOverworldCreated;
     public static Func<Overworld> GetOverworld;
 
-    [Obsolete("GetConfig is deprecated and will be removed in the next breaking update, use GetConfigFromArea or use GetConfigFromString")]    public static Func<AreaKey, Type, MapMeta> GetConfigFromArea;
+    [Obsolete("GetConfig is deprecated and will be removed in the next breaking update, use GetConfigFromArea or use GetConfigFromString")]
+	public static Func<AreaKey, Type, MapMeta> GetConfig;
+    public static Func<AreaKey, Type, MapMeta> GetConfigFromArea;
     public static Func<string, Type, MapMeta> GetConfigFromString;
 
     public static event Action<AreaKey> AreaChanged
