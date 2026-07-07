@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
 using Celeste.Mod.Meta;
 using YamlDotNet.Serialization;
-using On.Celeste.Mod.Helpers.LegacyMonoMod;
 
 namespace Celeste.Mod.OverworldHelper;
 
@@ -16,29 +15,31 @@ public class CustomConfig
         return (MapMeta)deserializer.Deserialize(yamlData, ty);
     }
 
-    public static MapMeta GetConfig(AreaKey area, Type ty)
+    public static MapMeta GetConfig(string areaLevelSet, string areaSID, Type ty)
     {
         if (!(typeof(MapMeta).IsAssignableFrom(ty))) throw new ArgumentException("given config type must inherit from MapMeta class");
-        string sid = area.GetSID();
-        ModAsset levelSet = Everest.Content.Get("Maps/"+area.GetLevelSet());
-        if (levelSet != null)
+        ModAsset levelSetAsset = Everest.Content.Get("Maps/"+areaLevelSet);
+        if (levelSetAsset != null)
         {
-            ModAsset MapMeta = levelSet.Children.Find((ModAsset asset) =>
+            ModAsset areaMeta = levelSetAsset.Children.Find((ModAsset asset) =>
             {
-                return asset.PathVirtual.StartsWith("Maps/" + sid) && asset.PathVirtual.EndsWith(".meta");
+                return asset.PathVirtual.EndsWith(areaSID+".meta");
             });
-            if (MapMeta != null)
+            if (areaMeta != null)
             {
-                string confData = Encoding.UTF8.GetString(MapMeta.Data);
+                string confData = Encoding.UTF8.GetString(areaMeta.Data);
                 return DeserializeConfig(confData, ty);
             }
         }
         return null;
     }
+    
+    public static MapMeta GetConfig(AreaKey area, Type ty) => GetConfig(area.GetLevelSet(), area.GetSID(), ty);
 
-    public static T GetConfig<T>(AreaKey area) where T : MapMeta
+    public static MapMeta GetConfig(string area, Type ty)
     {
-        Type ty = typeof(T);
-        return (T)GetConfig(area, ty);
+        if (!area.Contains('/')) return null;
+        string levelSet = string.Join("/",area.Split("/").SkipLast(1));
+        return GetConfig(levelSet,area,ty);
     }
 }
