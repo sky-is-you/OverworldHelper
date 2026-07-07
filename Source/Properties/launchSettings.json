@@ -1,0 +1,15 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Debug": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Celeste\\Celeste.exe",
+      "commandLineArgs": "--debug --debugger-attach"
+    },
+    "Release": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Celeste\\Celeste.exe",
+      "commandLineArgs": "--console"
+    }
+  }
+}
