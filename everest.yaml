@@ -1,5 +1,5 @@
 - Name: OverworldHelper
-  Version: 0.3.1
+  Version: 0.4.0
   DLL: bin/OverworldHelper.dll
   Dependencies:
     - Name: EverestCore
