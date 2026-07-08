@@ -7,12 +7,6 @@ namespace Celeste.Mod.OverworldHelper;
 [ModExportName("OverworldHelper")]
 public static class OverworldHelperExports
 {
-
-    public static bool GetEnabled()
-    {
-        return OverworldHelperModule.Settings.Enabled;
-    }
-
     public static void SubscribeToAreaChanged(Action<AreaKey> callback)
     {
         OverworldTracker.AreaChanged += callback;
@@ -35,8 +29,9 @@ public static class OverworldHelperExports
     }
     public static MapMeta GetConfigFromArea(AreaKey area, Type type) => CustomConfig.GetConfig(area, type);
 
-    // backwards compatibility
-    public static MapMeta GetConfig(AreaKey area, Type type) => GetConfigFromArea(area, type);
-
     public static MapMeta GetConfigFromString(string area, Type type) => CustomConfig.GetConfig(area, type);
+    
+    // backwards compatibility
+    public static bool GetEnabled() => true;
+    public static MapMeta GetConfig(AreaKey area, Type type) => GetConfigFromArea(area, type);
 }

@@ -5,10 +5,6 @@ namespace Celeste.Mod.OverworldHelper;
 
 public class OverworldHelperModule : EverestModule {
     public static OverworldHelperModule Instance { get; private set; }
-
-    public override Type SettingsType => typeof(Settings);
-    public static Settings Settings => (Settings) Instance._Settings;
-    public static bool Enabled => Settings.Enabled;
     
     public OverworldHelperModule() {
         Instance = this;
@@ -23,7 +19,7 @@ public class OverworldHelperModule : EverestModule {
     public static OverworldTracker Tracker;
 
     public override void Load() {
-        if (Enabled) Tracker = new();
+        Tracker = new();
         typeof(OverworldHelperExports).ModInterop();
     }
 
