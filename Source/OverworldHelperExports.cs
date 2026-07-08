@@ -23,6 +23,22 @@ public static class OverworldHelperExports
     {
         OverworldTracker.OverworldCreated -= callback;
     }
+    public static void SubscribeToVanillaOverworldCreated(Action<Overworld> callback)
+    {
+        OverworldTracker.VanillaOverworldCreated += callback;
+    }
+    public static void UnsubscribeFromVanillaOverworldCreated(Action<Overworld> callback)
+    {
+        OverworldTracker.VanillaOverworldCreated -= callback;
+    }
+    public static void SubscribeToCustomOverworldCreated(Action<Overworld> callback)
+    {
+        OverworldTracker.CustomOverworldCreated += callback;
+    }
+    public static void UnsubscribeFromCustomOverworldCreated(Action<Overworld> callback)
+    {
+        OverworldTracker.CustomOverworldCreated -= callback;
+    }
     public static Overworld GetOverworld()
     {
         return OverworldHelperModule.Tracker.currentOverworld;

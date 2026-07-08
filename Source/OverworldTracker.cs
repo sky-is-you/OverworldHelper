@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using Celeste.Mod.Meta;
 
 namespace Celeste.Mod.OverworldHelper;
 
 public class OverworldTracker
 {
     public static event Action<AreaKey> AreaChanged;
+    public static bool IsVanilla;
+    public static event Action<Overworld> VanillaOverworldCreated;
+    public static event Action<Overworld> CustomOverworldCreated;
     public static event Action<Overworld> OverworldCreated;
 
     private AreaKey? currArea => SaveData.Instance?.LastArea_Safe;
     private int lastAreaID=-1;
     public Overworld currentOverworld;
-
+    
     private void AttachToNewOverworld(OuiMainMenu menu, List<MenuButton> buttons)
     {
         currentOverworld = menu.Overworld;
+        // overworld cores should use custom type
+        IsVanilla = menu.Overworld.GetType().IsAssignableFrom(typeof(Overworld));
         lastAreaID = -1; // invoke area change
+        ( IsVanilla ? VanillaOverworldCreated : CustomOverworldCreated )?.Invoke(currentOverworld);
         OverworldCreated?.Invoke(currentOverworld);
         currentOverworld.OnEndOfFrame += PollArea;
     }
