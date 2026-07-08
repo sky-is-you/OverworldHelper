@@ -9,6 +9,12 @@ namespace Celeste.Mod.OverworldHelper;
 [ModExportName("OverworldHelper")]
 public static class OverworldHelperExports
 {
+
+    public static bool GetEnabled()
+    {
+        return OverworldHelperModule.Settings.Enabled;
+    }
+
     public static void SubscribeToAreaChanged(Action<AreaKey> callback)
     {
         OverworldTracker.AreaChanged += callback;
