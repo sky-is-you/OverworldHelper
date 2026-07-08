@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MonoMod.ModInterop;
 
 namespace Celeste.Mod.OverworldHelper;

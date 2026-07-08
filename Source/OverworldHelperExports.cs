@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using Celeste.Mod.Meta;
 using MonoMod.ModInterop;
-using MonoMod.Utils;
 
 namespace Celeste.Mod.OverworldHelper;
 
