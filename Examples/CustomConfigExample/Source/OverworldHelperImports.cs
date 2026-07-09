@@ -19,8 +19,10 @@ public static class OverworldHelperImports
     public static Action<Action<Overworld>> UnsubscribeFromVanillaOverworldCreated;
     public static Action<Action<Overworld>> SubscribeToCustomOverworldCreated;
     public static Action<Action<Overworld>> UnsubscribeFromCustomOverworldCreated;
-    public static Action<Action> SubscribeToTitleScreenTriggered;
-    public static Action<Action> UnsubscribeFromTitleScreenTriggered;
+    public static Action<Action<OuiTitleScreen>> SubscribeToTitleScreenEntry;
+    public static Action<Action<OuiTitleScreen>> UnsubscribeFromTitleScreenEntry;
+    public static Action<Action<OuiTitleScreen>> SubscribeToTitleScreenExit;
+    public static Action<Action<OuiTitleScreen>> UnsubscribeFromTitleScreenExit;
     
     // Get status method imports
     public static Func<Overworld> GetOverworld;
@@ -79,9 +81,14 @@ public static class OverworldHelperImports
         add => SubscribeToCustomOverworldCreated(value);
         remove => UnsubscribeFromCustomOverworldCreated(value);
     }
-    public static event Action TitleScreenTriggered
+    public static event Action TitleScreenEntry
     {
-        add => SubscribeToTitleScreenTriggered(value);
-        remove => UnsubscribeFromTitleScreenTriggered(value);
+        add => SubscribeToTitleScreenEntry(value);
+        remove => UnsubscribeFromTitleScreenEntry(value);
+    }
+    public static event Action TitleScreenExit
+    {
+        add => SubscribeToTitleScreenExit(value);
+        remove => UnsubscribeFromTitleScreenExit(value);
     }
 }

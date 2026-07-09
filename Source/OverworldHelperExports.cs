@@ -68,18 +68,29 @@ public static class OverworldHelperExports
         OverworldTracker.CustomOverworldCreated -= callback;
     }
 
-    public static void SubscribeToTitleScreenTriggered(Action callback)
+    public static void SubscribeToTitleScreenEntry(Action<OuiTitleScreen> callback)
     {
         ArgumentNullException.ThrowIfNull(callback);
-        OverworldTracker.TitleScreenTriggered += callback;
+        OverworldTracker.TitleScreenEntry += callback;
     }
 
-    public static void UnsubscribeFromTitleScreenTriggered(Action callback)
+    public static void UnsubscribeFromTitleScreenEntry(Action<OuiTitleScreen> callback)
     {
         ArgumentNullException.ThrowIfNull(callback);
-        OverworldTracker.TitleScreenTriggered -= callback;
+        OverworldTracker.TitleScreenEntry -= callback;
     }
 
+    public static void SubscribeToTitleScreenExit(Action<OuiTitleScreen> callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+        OverworldTracker.TitleScreenExit += callback;
+    }
+
+    public static void UnsubscribeFromTitleScreenExit(Action<OuiTitleScreen> callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+        OverworldTracker.TitleScreenExit -= callback;
+    }
     // shorthand stuff i'd like to not write a bunch
     public static Overworld GetOverworld() => OverworldTracker.CurrentOverworld;
     public static bool GetOverworldIsVanilla() => OverworldTracker.OverworldIsVanilla;
@@ -105,6 +116,17 @@ public static class OverworldHelperExports
     
     // backwards compatibility
     // slated for removal
+    public static void SubscribeToTitleScreenTriggered(Action callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+        OverworldTracker.TitleScreenTriggered += callback;
+    }
+
+    public static void UnsubscribeFromTitleScreenTriggered(Action callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+        OverworldTracker.TitleScreenTriggered -= callback;
+    }
     public static MapMeta GetConfigFromString(string area, Type type) => FindConfigFromString(area, type);
     public static MapMeta GetConfigFromArea(AreaKey area, Type type) => GetConfigFromAreaKey(area, type);
     public static bool GetEnabled() => true;

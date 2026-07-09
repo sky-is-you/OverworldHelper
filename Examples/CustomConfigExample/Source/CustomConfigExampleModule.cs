@@ -19,7 +19,7 @@ public class CustomConfigExampleModule : EverestModule {
     
     private void OnAreaChanged(AreaKey area)
     {
-        CustomConfig.OurMapMeta meta = OverworldHelperImports.ReadConfig<CustomConfig.OurMapMeta>(area);
+        CustomConfig.OurMapMeta meta = OverworldHelperImports.FindConfig<CustomConfig.OurMapMeta>(area);
         if (meta.OurMeta != null)
         {
             Logger.Info("CustomConfigExample", "bool: " + meta.OurMeta.BoolValue);
