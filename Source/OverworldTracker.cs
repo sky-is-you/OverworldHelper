@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Monocle;
-using Collide = On.Monocle.Collide;
 
 namespace Celeste.Mod.OverworldHelper;
 
