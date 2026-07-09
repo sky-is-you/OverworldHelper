@@ -5,8 +5,9 @@ namespace Celeste.Mod.OverworldHelper;
 
 public class OverworldHelperModule : EverestModule {
     public static OverworldHelperModule Instance { get; private set; }
-    
-    public OverworldHelperModule() {
+
+    public OverworldHelperModule()
+    {
         Instance = this;
 #if DEBUG
         // debug builds use verbose logging
@@ -16,15 +17,15 @@ public class OverworldHelperModule : EverestModule {
         Logger.SetLogLevel(nameof(OverworldHelperModule), LogLevel.Info);
 #endif
     }
-    public static OverworldTracker Tracker;
 
-    public override void Load() {
-        Tracker = new();
+    public override void Load()
+    {
+        OverworldTracker.Initialize();
         typeof(OverworldHelperExports).ModInterop();
     }
 
     public override void Unload()
     {
-        Tracker.Unload();
+        OverworldTracker.Unload();
     }
 }

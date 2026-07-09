@@ -2,58 +2,86 @@ using System;
 using Celeste.Mod.Meta;
 using MonoMod.ModInterop;
 
-namespace Celeste.Mod.CustomConfigExample;
+namespace Celeste.Mod.SkysOverworldCore;
 
 [ModImportName("OverworldHelper")]
 public static class OverworldHelperImports
 {
+    // deprecated methods not included for the sake of future compatibility
+    // Event hook method imports
     public static Action<Action<AreaKey>> SubscribeToAreaChanged;
     public static Action<Action<AreaKey>> UnsubscribeFromAreaChanged;
+    public static Action<Action<int>> SubscribeToAreaChangedID;
+    public static Action<Action<int>> UnsubscribeFromAreaChangedID;
     public static Action<Action<Overworld>> SubscribeToOverworldCreated;
     public static Action<Action<Overworld>> UnsubscribeFromOverworldCreated;
     public static Action<Action<Overworld>> SubscribeToVanillaOverworldCreated;
     public static Action<Action<Overworld>> UnsubscribeFromVanillaOverworldCreated;
     public static Action<Action<Overworld>> SubscribeToCustomOverworldCreated;
     public static Action<Action<Overworld>> UnsubscribeFromCustomOverworldCreated;
-    public static Func<Overworld> GetOverworld;
-
-    [Obsolete("GetConfig is deprecated and will be removed in the next breaking update, use GetConfigFromArea or use GetConfigFromString")]
-	public static Func<AreaKey, Type, MapMeta> GetConfig;
-    public static Func<AreaKey, Type, MapMeta> GetConfigFromArea;
-    public static Func<string, Type, MapMeta> GetConfigFromString;
+    public static Action<Action> SubscribeToTitleScreenTriggered;
+    public static Action<Action> UnsubscribeFromTitleScreenTriggered;
     
-    [Obsolete("GetEnabled is deprecated and will be removed in the next breaking update")]
-    public static Func<bool> GetEnabled;
+    // Get status method imports
+    public static Func<Overworld> GetOverworld;
+    public static Func<bool> GetOverworldIsVanilla;
+    
+    // Get assets method imports
+    public static Func<int, AreaData> GetAreaDataFromID;
+    public static Func<int, AreaKey> GetAreaKeyFromID;
+    public static Func<string, AreaData> FindAreaDataFromString;
+    public static Func<string, AreaKey?> FindAreaKeyFromString;
+    public static Func<int, Type, MapMeta> GetConfigFromAreaID;
+    public static Func<AreaKey, Type, MapMeta> GetConfigFromAreaKey;
+    public static Func<AreaData, Type, MapMeta> GetConfigFromAreaData;
+    public static Func<string, Type, MapMeta> FindConfigFromString;
+    
+    public static AreaData FindAreaData(int areaID)
+        => GetAreaDataFromID(areaID);
+    public static AreaData FindAreaData(string area)
+        => FindAreaDataFromString(area);
+    public static AreaKey FindAreaKey(int areaID)
+        => GetAreaKeyFromID(areaID);
+    public static AreaKey? FindAreaKey(string area)
+        => FindAreaKeyFromString(area);
+    public static T FindConfig<T>(int areaID) where T : MapMeta
+        => (T)GetConfigFromAreaID(areaID, typeof(T));
+    public static T FindConfig<T>(AreaKey area) where T : MapMeta
+        => (T)GetConfigFromAreaKey(area, typeof(T));
+    public static T FindConfig<T>(AreaData area) where T : MapMeta
+        => (T)GetConfigFromAreaData(area, typeof(T));
+    public static T FindConfig<T>(string area) where T : MapMeta
+        => (T)FindConfigFromString(area, typeof(T));
 
-    // for ease of access
+    // Event hooks (ease of access)
     public static event Action<AreaKey> AreaChanged
     {
         add => SubscribeToAreaChanged(value);
         remove => UnsubscribeFromAreaChanged(value);
     }
-    public static T ReadConfig<T>(AreaKey area) where T : MapMeta
+    public static event Action<int> AreaChangedID
     {
-        return (T)GetConfigFromArea(area, typeof(T));
+        add => SubscribeToAreaChangedID(value);
+        remove => UnsubscribeFromAreaChangedID(value);
     }
-    
-    public static T ReadConfig<T>(string area) where T : MapMeta
-    {
-        return (T)GetConfigFromString(area, typeof(T));
-    }
-
-    public static event Action<Overworld> OverworldLoaded
+    public static event Action<Overworld> OverworldCreated
     {
         add => SubscribeToOverworldCreated(value);
         remove => UnsubscribeFromOverworldCreated(value);
     }
-    public static event Action<Overworld> VanillaOverworldLoaded
+    public static event Action<Overworld> VanillaOverworldCreated
     {
         add => SubscribeToVanillaOverworldCreated(value);
         remove => UnsubscribeFromVanillaOverworldCreated(value);
     }
-    public static event Action<Overworld> CustomOverworldLoaded
+    public static event Action<Overworld> CustomOverworldCreated
     {
         add => SubscribeToCustomOverworldCreated(value);
         remove => UnsubscribeFromCustomOverworldCreated(value);
+    }
+    public static event Action TitleScreenTriggered
+    {
+        add => SubscribeToTitleScreenTriggered(value);
+        remove => UnsubscribeFromTitleScreenTriggered(value);
     }
 }
