@@ -11,14 +11,13 @@ public class CustomConfig
 
     public static MapMeta GetConfig(int areaID, Type ty)
     {
-        // arg checks
         if (areaID < 0 || areaID >= AreaData.Areas.Count)
             throw new ArgumentException("areaID must not be out of range");
         if (!ty.IsAssignableTo(typeof(MapMeta)))
             throw new ArgumentException("given config type must inherit from MapMeta class");
 
         AreaData area = AreaData.Areas[areaID]; // assume it exists if we're here :D
-        // retrieve .meta.yaml file because everest doesn't parse our stuff
+        // everest doesn't parse our stuff so we have to
         ModAsset levelSetAsset = Everest.Content.Get("Maps/"+area.LevelSet);
         ModAsset areaMeta = levelSetAsset?.Children.Find(asset => asset.PathVirtual.EndsWith(area.SID+".meta"));
         if (areaMeta == null) return null;
