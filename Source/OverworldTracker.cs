@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Monocle;
 
@@ -16,57 +17,65 @@ public static class OverworldTracker
 
     public static Overworld CurrentOverworld;
     public static bool OverworldIsVanilla;
-    
-    private static int? lastAreaID;
-    
-    private static void AttachToNewOverworld(OuiMainMenu menu, List<MenuButton> buttons)
+
+    private static void AttachToNewOverworld(
+        On.Celeste.OverworldLoader.orig_LoadThread orig,
+        OverworldLoader self
+    )
     {
-        CurrentOverworld = menu.Overworld;
-        // overworld cores should use custom type
+        orig(self);
+        CurrentOverworld = self.overworld;
         OverworldIsVanilla = typeof(Overworld).IsAssignableTo(CurrentOverworld.GetType());
-        lastAreaID = null; // invoke area change
         ( OverworldIsVanilla ? VanillaOverworldCreated : CustomOverworldCreated )?.Invoke(CurrentOverworld);
-        CurrentOverworld.OnEndOfFrame += () =>
-        {
-            CurrentOverworld.Entities.UpdateLists(); // register changes after OverworldCreated hooks
-            OuiTitleScreen title = CurrentOverworld.Entities.FindFirst<OuiTitleScreen>();
-            if (title != null) title.PostUpdate += PollTitle; // hook to title screen :D
-        };
-        menu.PostUpdate += PollArea;
     }
 
-    private static float lastAlpha = -1f;
-    private static Scene lastScene;
-    private static bool lastEnterState = false;
-
-    private static void PollTitle(Entity entity)
+    private static float AttachToAreaChange(
+        On.Celeste.MountainRenderer.orig_EaseCamera_int_MountainCamera_Nullable1_bool_bool orig,
+        MountainRenderer self,
+        int area,
+        MountainCamera transform,
+        float? duration = null,
+        bool nearTarget = true,
+        bool targetRotate = false
+        )
     {
-        OuiTitleScreen title = (OuiTitleScreen)entity;
-        if (title.alpha != lastAlpha)
+        if (area >= 0 && area < AreaData.Areas.Count)
         {
-            bool enterstate = (title.alpha > lastAlpha);
-            if (lastEnterState != enterstate)
-                ( (lastEnterState = enterstate) ? TitleScreenEntry : TitleScreenExit )?.Invoke(title);
-            lastAlpha = title.alpha;
+            AreaChanged?.Invoke(AreaData.Areas[area].ToKey());
+            AreaChangedID?.Invoke(area);
         }
+        return orig(self, area, transform, duration, nearTarget, targetRotate);
+    }
+    
+    private static IEnumerator AttachToTitleScreenEntry(
+        On.Celeste.OuiTitleScreen.orig_Enter orig,
+        OuiTitleScreen self,
+        Oui from
+    )
+    {
+        TitleScreenEntry?.Invoke(self);
+        return orig(self, from);
     }
 
-    private static void PollArea(Entity entity)
+    private static IEnumerator AttachToTitleScreenExit(
+        On.Celeste.OuiTitleScreen.orig_Leave orig,
+        OuiTitleScreen self,
+        Oui next
+    )
     {
-        OuiMainMenu menu = (OuiMainMenu)entity;
-        if (menu.Overworld.Mountain.Area != lastAreaID)
-        {
-            if ((lastAreaID = menu.Overworld.Mountain.Area) >= 0)
-                AreaChanged?.Invoke(AreaData.Areas[lastAreaID.Value].ToKey());
-            AreaChangedID?.Invoke(lastAreaID.Value);
-        }
+        TitleScreenExit?.Invoke(self);
+        return orig(self, next);
     }
+
 
     private static void InvokeOverworldCreated(Overworld overworld) => OverworldCreated?.Invoke(overworld);
     
     public static void Initialize()
     {
-        Everest.Events.MainMenu.OnCreateButtons += AttachToNewOverworld;
+        On.Celeste.OverworldLoader.LoadThread += AttachToNewOverworld;
+        On.Celeste.MountainRenderer.EaseCamera_int_MountainCamera_Nullable1_bool_bool += AttachToAreaChange;
+        On.Celeste.OuiTitleScreen.Enter += AttachToTitleScreenEntry;
+        On.Celeste.OuiTitleScreen.Leave += AttachToTitleScreenExit;
         VanillaOverworldCreated += InvokeOverworldCreated;
         CustomOverworldCreated += InvokeOverworldCreated;
     }
@@ -75,6 +84,9 @@ public static class OverworldTracker
     {
         VanillaOverworldCreated -= InvokeOverworldCreated;
         CustomOverworldCreated -= InvokeOverworldCreated;
-        Everest.Events.MainMenu.OnCreateButtons += AttachToNewOverworld;
+        On.Celeste.OuiTitleScreen.Leave -= AttachToTitleScreenExit;
+        On.Celeste.OuiTitleScreen.Enter -= AttachToTitleScreenEntry;
+        On.Celeste.MountainRenderer.EaseCamera_int_MountainCamera_Nullable1_bool_bool -= AttachToAreaChange;
+        On.Celeste.OverworldLoader.LoadThread -= AttachToNewOverworld;
     }
 }
