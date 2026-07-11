@@ -24,8 +24,10 @@ public static class OverworldTracker
     )
     {
         orig(self);
-        CurrentOverworld = self.overworld;
-        OverworldIsVanilla = typeof(Overworld).IsAssignableTo(CurrentOverworld.GetType());
+        OverworldCreated?.Invoke(self.overworld);
+        // todo perhaps custom overworlds will override' overworld class. figure out in switcher because i'll go with that method.
+        // concept: switcher hooks to vanilla overworld and detours to modded overworld given under type provided by switcher 
+        OverworldIsVanilla = typeof(Overworld).IsAssignableTo(self.overworld.GetType());
         ( OverworldIsVanilla ? VanillaOverworldCreated : CustomOverworldCreated )?.Invoke(CurrentOverworld);
     }
 
@@ -76,14 +78,10 @@ public static class OverworldTracker
         On.Celeste.MountainRenderer.EaseCamera_int_MountainCamera_Nullable1_bool_bool += AttachToAreaChange;
         On.Celeste.OuiTitleScreen.Enter += AttachToTitleScreenEntry;
         On.Celeste.OuiTitleScreen.Leave += AttachToTitleScreenExit;
-        VanillaOverworldCreated += InvokeOverworldCreated;
-        CustomOverworldCreated += InvokeOverworldCreated;
     }
 
     public static void Unload()
     {
-        VanillaOverworldCreated -= InvokeOverworldCreated;
-        CustomOverworldCreated -= InvokeOverworldCreated;
         On.Celeste.OuiTitleScreen.Leave -= AttachToTitleScreenExit;
         On.Celeste.OuiTitleScreen.Enter -= AttachToTitleScreenEntry;
         On.Celeste.MountainRenderer.EaseCamera_int_MountainCamera_Nullable1_bool_bool -= AttachToAreaChange;
