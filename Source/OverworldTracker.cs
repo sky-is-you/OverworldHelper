@@ -11,7 +11,6 @@ public static class OverworldTracker
     public static event Action<Overworld> VanillaOverworldCreated;
     public static event Action<Overworld> CustomOverworldCreated;
     public static event Action<Overworld> OverworldCreated;
-    public static event Action TitleScreenTriggered;
     public static event Action<OuiTitleScreen> TitleScreenEntry;
     public static event Action<OuiTitleScreen> TitleScreenExit;
 
@@ -64,20 +63,16 @@ public static class OverworldTracker
     }
 
     private static void InvokeOverworldCreated(Overworld overworld) => OverworldCreated?.Invoke(overworld);
-    private static void InvokeTitleScreenTriggered(OuiTitleScreen dummy) => TitleScreenTriggered?.Invoke();
     
     public static void Initialize()
     {
         Everest.Events.MainMenu.OnCreateButtons += AttachToNewOverworld;
         VanillaOverworldCreated += InvokeOverworldCreated;
         CustomOverworldCreated += InvokeOverworldCreated;
-        // backwards compatibility
-        TitleScreenEntry += InvokeTitleScreenTriggered;
     }
 
     public static void Unload()
     {
-        TitleScreenEntry -= InvokeTitleScreenTriggered;
         VanillaOverworldCreated -= InvokeOverworldCreated;
         CustomOverworldCreated -= InvokeOverworldCreated;
         Everest.Events.MainMenu.OnCreateButtons += AttachToNewOverworld;

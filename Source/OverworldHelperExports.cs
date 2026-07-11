@@ -113,22 +113,4 @@ public static class OverworldHelperExports
         AreaData areaData = FindAreaDataFromString(area);
         return (areaData != null) ? GetConfigFromAreaData(areaData, type) : null;
     }
-    
-    // backwards compatibility
-    // slated for removal
-    public static void SubscribeToTitleScreenTriggered(Action callback)
-    {
-        ArgumentNullException.ThrowIfNull(callback);
-        OverworldTracker.TitleScreenTriggered += callback;
-    }
-
-    public static void UnsubscribeFromTitleScreenTriggered(Action callback)
-    {
-        ArgumentNullException.ThrowIfNull(callback);
-        OverworldTracker.TitleScreenTriggered -= callback;
-    }
-    public static MapMeta GetConfigFromString(string area, Type type) => FindConfigFromString(area, type);
-    public static MapMeta GetConfigFromArea(AreaKey area, Type type) => GetConfigFromAreaKey(area, type);
-    public static bool GetEnabled() => true;
-    public static MapMeta GetConfig(AreaKey area, Type type) => GetConfigFromArea(area, type);
 }
