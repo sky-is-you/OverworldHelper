@@ -81,12 +81,12 @@ public static class OverworldHelperImports
         add => SubscribeToCustomOverworldCreated(value);
         remove => UnsubscribeFromCustomOverworldCreated(value);
     }
-    public static event Action TitleScreenEntry
+    public static event Action<OuiTitleScreen> TitleScreenEntry
     {
         add => SubscribeToTitleScreenEntry(value);
         remove => UnsubscribeFromTitleScreenEntry(value);
     }
-    public static event Action TitleScreenExit
+    public static event Action<OuiTitleScreen> TitleScreenExit
     {
         add => SubscribeToTitleScreenExit(value);
         remove => UnsubscribeFromTitleScreenExit(value);
