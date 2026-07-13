@@ -24,6 +24,7 @@ public static class OverworldTracker
     )
     {
         orig(self);
+        CurrentOverworld = self.overworld;
         OverworldCreated?.Invoke(self.overworld);
         // todo perhaps custom overworlds will override' overworld class. figure out in switcher because i'll go with that method.
         // concept: switcher hooks to vanilla overworld and detours to modded overworld given under type provided by switcher 
